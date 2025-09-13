@@ -1,69 +1,47 @@
-# React + TypeScript + Vite
+# Spotter Frontend (React + Vite + Leaflet)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple UI to plan trips, view the route on a map, see scheduled stops, and inspect ELD logs by day.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd spotter-react
+# point to local or deployed backend
+VITE_API_BASE=http://localhost:8000 yarn dev
+# or
+VITE_API_BASE=https://spotter-django.onrender.com yarn dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment
+- `VITE_API_BASE` (required): base URL of the Django backend (e.g., `https://spotter-django.onrender.com`).
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Features
+- Form: current location, pickup, dropoff, cycle hours used
+- Calls POST `/api/plan-trip/`
+- Map (Leaflet): route polyline + colored markers for pickup, break, rest, fuel, dropoff
+- Summary card with total miles and hours
+- ELD logs: per‑day 24‑hour grid (Off, Sleeper, Driving, On duty)
+- Responsive layout for mobile/tablet/desktop
+
+## Tech
+- React 19, TypeScript, Vite
+- react-leaflet + OpenStreetMap tiles
+
+## Deploy
+### Vercel
+1. Import `spotter-react` as a project
+2. Add env: `VITE_API_BASE=https://<your-backend-url>`
+3. Deploy
+
+### Static hosting
+Build and host the `dist` folder anywhere
+```bash
+yarn build
+# serve ./dist with any static host
 ```
+
+## Notes
+- Backend returns GeoJSON; the UI converts to Leaflet lat/lon for display
+- Timezone and ETAs are approximate and for demo purposes
