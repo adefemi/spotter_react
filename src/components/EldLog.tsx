@@ -1,4 +1,3 @@
-import React from 'react'
 
 type EldSegment = { start: string; end: string; status: 'OFF' | 'SB' | 'D' | 'ON'; note: string }
 
@@ -27,9 +26,8 @@ function hoursBetween(a: Date, b: Date) {
 
 export default function EldLog({ date, segments }: Props) {
   const dayStart = new Date(`${date}T00:00:00`)
-  const dayEnd = new Date(`${date}T23:59:59`)
 
-  const rects = segments.map((s, idx) => {
+  const rects = segments.map((s) => {
     const start = new Date(s.start)
     const end = new Date(s.end)
     const rowIndex = ROWS.findIndex(r => r.key === s.status)
